@@ -120,6 +120,8 @@ class App extends Component {
                 case 'Grammar':
                     return (<GrammarComponent conjugations={conjugations}
                                               declensions={declensions} />);
+                case 'About':
+                    return (<About />);
                 default: // 'Learn'
                     return (<p>This view is still under development.</p>);
             }
