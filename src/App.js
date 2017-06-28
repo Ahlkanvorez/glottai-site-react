@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import { Conjugation } from './grammar/grammar.js';
+import { GrammarComponent} from './grammar/grammar.js';
 
 
 const firstConjugation = {
@@ -56,24 +55,79 @@ const secondConjugation = {
         }
     ]
 };
-
 const conjugations = [firstConjugation, secondConjugation];
+
+const firstDeclension = {
+    name: 'First Declension',
+    data: [
+        {
+            gender: "f.",
+            table: [
+                ["Nom./Voc.", "-a", "-ae"],
+                ["Gen.", "-ae", "-ārum"],
+                ["Dat.", "-ae", "-īs"],
+                ["Acc.", "-am",  "-ās"],
+                ["Abl.", "-ā",  "-īs"]
+            ]
+        }
+    ]
+};
+const secondDeclension = {
+    name: 'Second Declension',
+    data: [
+        {
+            gender: "m.",
+            table: [
+                ["Nom.", "-us/er", "-ī"],
+                ["Gen.", "-ī", "-ōrum"],
+                ["Dat.", "-ō", "-īs"],
+                ["Acc.", "-um", "-ōs"],
+                ["Abl.", "-ō", "-īs"],
+                ["Voc.", "-e/er", "-ī"]
+            ]
+        },
+        {
+            gender: "n.",
+            table: [
+                ["Nom./Voc.", "-um", "-a"],
+                ["Gen.", "-ī", "-ōrum"],
+                ["Dat.", "-ō", "-īs"],
+                ["Acc.", "-um", "-a"],
+                ["Abl.", "-ō", "-īs"]
+            ]
+        }
+    ]
+};
+const declensions = [firstDeclension, secondDeclension];
 
 class App extends Component {
     render() {
         return (
-            <div className="container">
-                <div className="App App-header">
-                    <img src={logo} className="App-logo" alt="logo" />
-                    <h2>ΓΛΩΤΤΑΙ</h2>
-                </div>
-                <div className="row">
-                    <div className="col-lg-12">
-                        <h2>Grammar</h2>
-                        {conjugations.map(conjugation => (
-                            <Conjugation key={conjugation.name} conjugation={conjugation} />
-                        ))}
+            <div>
+                <nav className="navbar navbar-inverse navbar-fixed-top" role="navigation">
+                    <div className="container">
+                        <div className="navbar-header">
+                            <button type="button" className="navbar-toggle"
+                                    data-toggle="collapse"
+                                    data-target="#bs-example-navbar-collapse-1">
+                                <span className="sr-only">Toggle navigation</span>
+                                <span className="icon-bar"></span>
+                                <span className="icon-bar"></span>
+                                <span className="icon-bar"></span>
+                            </button>
+                            <a className="navbar-brand" href="/">γλῶτται</a>
+                        </div>
+                        <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <ul className="nav navbar-nav">
+                                <li><a href="/learn">Learn</a></li>
+                                <li><a href="/grammar">Grammar</a></li>
+                                <li><a href="/">About</a></li>
+                            </ul>
+                        </div>
                     </div>
+                </nav>
+                <div className="container" style={{ marginTop: '75px' }}>
+                    <GrammarComponent conjugations={conjugations} declensions={declensions} />
                 </div>
             </div>
         );
