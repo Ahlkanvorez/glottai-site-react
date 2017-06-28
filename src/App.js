@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Grammar from './grammar/grammar.js';
+import { Conjugation } from './grammar/grammar.js';
 
 
 const firstConjugation = {
@@ -59,8 +59,6 @@ const secondConjugation = {
 
 const conjugations = [firstConjugation, secondConjugation];
 
-const makeKey = data => data.tense + ' ' + data.mood + ' ' + data.voice;
-
 class App extends Component {
     render() {
         return (
@@ -73,11 +71,7 @@ class App extends Component {
                     <div className="col-lg-12">
                         <h2>Grammar</h2>
                         {conjugations.map(conjugation => (
-                            <div key={conjugation.name} className="row">
-                                <h3>{ conjugation.name } ({conjugation.theme})</h3>
-                                {conjugation.data.map(data =>
-                                    (<Grammar className="col-md-4" key={makeKey(data)} data={ data } />))}
-                            </div>
+                            <Conjugation key={conjugation.name} conjugation={conjugation} />
                         ))}
                     </div>
                 </div>

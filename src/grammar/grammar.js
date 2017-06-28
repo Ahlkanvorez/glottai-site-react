@@ -1,16 +1,12 @@
 import React from 'react';
 
 
-const Grammar = props => (
-    <div className={props.className}>
+const GrammarTable = props => (
+    <div className={ props.className }>
         <h4>{ props.data.tense } { props.data.mood } { props.data.voice }</h4>
         <table className="table">
             <thead className="thead">
-            <tr>
-                <th>Person</th>
-                <th>Sg.</th>
-                <th>Pl.</th>
-            </tr>
+            <tr>{ props.headers.map(n => <th>{ n }</th>) }</tr>
             </thead>
             <tbody>
             { props.data.table.map(row => (
@@ -23,4 +19,24 @@ const Grammar = props => (
     </div>
 );
 
-export default Grammar;
+const makeKey = data => data.tense + ' ' + data.mood + ' ' + data.voice;
+
+const Grammar = props => (
+    <div className="row">
+        <h3>{ props.title }</h3>
+        { props.data.map(data =>
+            (<GrammarTable className="col-md-4"
+                           key={ makeKey(data) }
+                           data={ data }
+                           headers={ props.headers } />)
+        )}
+    </div>
+);
+
+const Conjugation = props => (
+    <Grammar title={ props.conjugation.name + '(' + props.conjugation.theme + ')' }
+             data={props.conjugation.data}
+             headers={ ['Person', 'Sg.', 'Pl.'] } />
+);
+
+export { Conjugation };
