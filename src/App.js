@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 import { GrammarComponent} from './grammar/grammar.js';
+import { Navigation } from './navigation.js';
+import { About } from './about.js';
 
 
 const firstConjugation = {
@@ -101,33 +103,32 @@ const secondDeclension = {
 const declensions = [firstDeclension, secondDeclension];
 
 class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { view: 'Grammar' };
+
+        this.handleViewChange = this.handleViewChange.bind(this);
+    }
+
+    handleViewChange(view) {
+        this.setState({ view });
+    }
+
     render() {
+        const selectView = view => {
+            switch (view) {
+                case 'Grammar':
+                    return (<GrammarComponent conjugations={conjugations}
+                                              declensions={declensions} />);
+                default: // 'Learn'
+                    return (<p>This view is still under development.</p>);
+            }
+        };
         return (
             <div>
-                <nav className="navbar navbar-inverse navbar-fixed-top" role="navigation">
-                    <div className="container">
-                        <div className="navbar-header">
-                            <button type="button" className="navbar-toggle"
-                                    data-toggle="collapse"
-                                    data-target="#bs-example-navbar-collapse-1">
-                                <span className="sr-only">Toggle navigation</span>
-                                <span className="icon-bar"></span>
-                                <span className="icon-bar"></span>
-                                <span className="icon-bar"></span>
-                            </button>
-                            <a className="navbar-brand" href="/">γλῶτται</a>
-                        </div>
-                        <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                            <ul className="nav navbar-nav">
-                                <li><a href="/learn">Learn</a></li>
-                                <li><a href="/grammar">Grammar</a></li>
-                                <li><a href="/">About</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
+                <Navigation handleViewChange={this.handleViewChange} />
                 <div className="container" style={{ marginTop: '75px' }}>
-                    <GrammarComponent conjugations={conjugations} declensions={declensions} />
+                    {selectView(this.state.view)}
                 </div>
             </div>
         );
