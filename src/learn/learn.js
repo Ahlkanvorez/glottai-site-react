@@ -36,7 +36,7 @@ class Learn extends React.Component {
             // and the stem is the second principal part minus the infinitive ending.
             return word.dictionaryEntry.split(' ')[1].slice(0, -3);
         } else if (word.type === 'noun' || word.type === 'adjective') {
-
+            // TODO: Do the same for nouns and adjectives.
         }
     }
 
@@ -56,7 +56,7 @@ class Learn extends React.Component {
             });
         }
         if (declension) {
-
+            // TODO: do the same for nouns & adjectives
         }
         this.setState({ word, conjugation, declension });
     }
