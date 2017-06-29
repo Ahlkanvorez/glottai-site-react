@@ -1,0 +1,16 @@
+
+$dark-red: #8A0707;
+$white-smoke: #FBF5f3;
+$pewter-blue: #8DAA9D;
+$wine-dregs: #522B47;
+$smoky-black: #0F0E0E;
+
+.correct {
+  background-color: $pewter-blue;
+  color: $smoky-black;
+}
+
+.incorrect {
+  background-color: lightcoral;
+  color: $smoky-black;
+}

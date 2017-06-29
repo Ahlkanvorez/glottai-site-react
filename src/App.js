@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import { GrammarComponent} from './grammar/grammar.js';
+import { Grammar } from './grammar/grammar.js';
 import { Navigation } from './navigation.js';
 import { About } from './about.js';
 
@@ -118,8 +118,8 @@ class App extends Component {
         const selectView = view => {
             switch (view) {
                 case 'Grammar':
-                    return (<GrammarComponent conjugations={conjugations}
-                                              declensions={declensions} />);
+                    return (<Grammar conjugations={conjugations}
+                                     declensions={declensions} />);
                 case 'About':
                     return (<About />);
                 default: // 'Learn'
