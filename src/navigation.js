@@ -2,7 +2,7 @@ import React from 'react';
 
 // props = { handleViewChange() }
 const Navigation = props => (
-    <nav className="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div className="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div className="container">
             <div className="navbar-header">
                 <button type="button" className="navbar-toggle"
@@ -37,7 +37,7 @@ const Navigation = props => (
                 </ul>
             </div>
         </div>
-    </nav>
+    </div>
 );
 
 export { Navigation };
