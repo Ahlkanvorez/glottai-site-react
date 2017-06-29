@@ -167,12 +167,14 @@ const words = [
         declension: 'Irregular'
     },
     {
-        form: "placēre",
+        form: "placuit",
         dictionaryEntry: 'placeō placēre placuī placitum',
         definition: "to please, give pleasure, be approved, be pleasing, be agreeable, be acceptable, suit, satisfy",
         lexicon: "http://www.perseus.tufts.edu/hopper/morph?l=placere&la=la#lexicon",
-        number: "Infinitive",
-        tense: "Present",
+        person: '3rd',
+        number: "Singular",
+        tense: "Perfect",
+        mood: 'Indicative',
         voice: "Active",
         type: "verb",
         conjugation: "Second"
@@ -187,6 +189,16 @@ const words = [
         voice: "Active",
         type: "verb",
         conjugation: "Irregular"
+    }
+];
+
+const cards = [
+    {
+        anteInput: [words.find(w => w.form === 'nātūra')],
+        postInput: [words.find(w => w.form === 'placuit')],
+        input: words.find(w => w.form === 'mihi'),
+        literalTranslation: 'Nature has pleased me.',
+        idiomaticTranslation: 'I have enjoyed nature'
     }
 ];
 
@@ -211,7 +223,8 @@ class App extends Component {
                 case 'about':
                     return (<About />);
                 default:
-                    return (<Learn words={words}
+                    return (<Learn card={cards[0]}
+                                   words={words}
                                    conjugations={conjugations}
                                    declensions={declensions} />);
             }

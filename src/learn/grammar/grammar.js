@@ -36,7 +36,7 @@ class QuizInput extends React.Component {
         const correct = this.props.correctClass;
         const incorrect = this.props.incorrectClass;
         event.target.value = event.target.value.toLocaleLowerCase();
-        const desiredClass = (event.target.value === event.target.placeholder) ? correct : incorrect;
+        const desiredClass = (event.target.value === this.props.answer) ? correct : incorrect;
         const hasCorrectClassName = event.target.className.indexOf(` ${desiredClass}`) >= 0;
         // If the input is not colored to match the correctness of the input, remove the incorrect class,
         // if present, and append the correct class.
@@ -51,12 +51,17 @@ class QuizInput extends React.Component {
         } else if (event.target.value === '') {
             event.target.className = event.target.className.split(correct).join('').split(incorrect).join('');
         }
+        // If the value is correct, call the callback for a correct answer.
+        if (this.props.onChange) {
+            this.props.onChange(event.target.value === this.props.answer);
+        }
     }
 
     render () {
         return (
-            <input className={`form-control ${this.props.className}`}
+            <input className={this.props.className}
                    type="text"
+                   size={this.props.size}
                    onChange={this.handleChange}
                    placeholder={this.props.placeholder} />
         );
@@ -77,6 +82,7 @@ class GrammarQuizTable extends React.Component {
         partialState.inputData.table = partialState.inputData.table.map((row, rowIndex) => (
             row.map((col, index) => (
                 index === 0 ? col : <QuizInput key={index}
+                                               className="form-control"
                                                placeholder={col}
                                                correctClass="correct"
                                                incorrectClass="incorrect" />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grammar } from './grammar/grammar.js';
+import { Grammar, QuizInput } from './grammar/grammar.js';
 
 // TODO: Generalize the Latin specific grammar into a library, so a Latin or Greek object can be passed as
 // TODO: (continued) a parameter and handle all of the specific gramamr for each language.
@@ -44,7 +44,7 @@ class Word extends React.Component {
             if (this.props.word.declension !== 'Irregular') {
                 return declensions[0];
             }
-            return declensions.filter(declension => declension.dictionaryEntry === this.props.word.dictionaryEntry)[0];
+            return declensions.find(declension => declension.dictionaryEntry === this.props.word.dictionaryEntry);
         }
     }
 
@@ -57,7 +57,7 @@ class Word extends React.Component {
             if (this.props.word.conjugation !== 'Irregular') {
                 return conjugations[0];
             }
-            return conjugations.filter(conjugation => conjugation.dictionaryEntry === this.props.word.dictionaryEntry)[0];
+            return conjugations.find(conjugation => conjugation.dictionaryEntry === this.props.word.dictionaryEntry);
         }
         // If word is not a verb, undefined should be the result.
     }
@@ -75,7 +75,7 @@ class Word extends React.Component {
             // from the second word in the dictionary entry; if it is an adjective of three endings, the stem can
             // be derived from removing the nom.fem.sg. ending from the second word in the dictionary entry.
             if (this.props.word.type === 'noun' || this.props.word.dictionaryEntry.split(' ').length === 2) {
-                const genSg = declension.data.filter(x => x.gender === this.props.word.gender)[0].table[1][1];
+                const genSg = declension.data.find(x => x.gender === this.props.word.gender).table[1][1];
                 // The - allows indexing from the end of the string, and the added 1 accounts for the fact that .length
                 // is 1 greater in magnitude than the desired index.
                 return this.props.word.dictionaryEntry.split(' ')[1].slice(0, 1 - genSg.length);
@@ -121,37 +121,85 @@ class Word extends React.Component {
     }
 }
 
-class Words extends React.Component {
-    constructor(props) {
+const Words = props => (
+    <span>
+        { props.words.map((w, index) =>
+            <span key={w.form + '_' + index} style={{ marginRight: "0.5em" }}>
+                <Word word={w}
+                      conjugations={props.conjugations}
+                      declensions={props.declensions}
+                      onClick={props.onClick} />
+            </span>
+        ) }
+    </span>
+);
+
+class Learn extends React.Component {
+    constructor (props) {
         super(props);
         this.state = {};
 
         this.showWordInfo = this.showWordInfo.bind(this);
+        this.onChange = this.onChange.bind(this);
     }
 
     showWordInfo (word, conjugation, declension) {
         this.setState({ wordInfo: <WordInfo word={word} conjugation={conjugation} declension={declension} /> });
     }
 
+    onChange (correct) {
+        this.setState({correct});
+    }
+
     render () {
         return (
-            <span>
-                { this.props.words.map((w, index) =>
-                    <span key={w.form + '_' + index} style={{ marginRight: "0.5em" }}>
-                        <Word word={w}
-                              conjugations={this.props.conjugations}
-                              declensions={this.props.declensions}
-                              onClick={this.showWordInfo} />
-                    </span>
-                ) }
-                { this.state.wordInfo }
-            </span>
+            <div>
+                <fieldset>
+                    <legend>Latin { this.state.correct ? '- Correct!' : '' }</legend>
+                    <Words words={this.props.card.anteInput}
+                           onClick={this.showWordInfo}
+                           conjugations={this.props.conjugations}
+                           declensions={this.props.declensions} />
+                    <QuizInput placeholder=""
+                               answer={this.props.card.input.form}
+                               className="learningQuizInput"
+                               size={this.props.card.input.form.length}
+                               correctClass="correct"
+                               incorrectClass="incorrect"
+                               onChange={this.onChange} />
+                    <Words words={this.props.card.postInput}
+                           onClick={this.showWordInfo}
+                           conjugations={this.props.conjugations}
+                           declensions={this.props.declensions} />
+                    <hr />
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Translation</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Literal</td>
+                            <td>{ this.props.card.literalTranslation }</td>
+                        </tr>
+                        <tr>
+                            <td>Idiomatic</td>
+                            <td>{ this.props.card.idiomaticTranslation }</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+
+                { this.state.wordInfo ? (
+                    <div>
+                        <hr />
+                        { this.state.wordInfo }
+                    </div>
+                ) : null }
+            </div>
         );
     }
 }
-
-const Learn = props => (
-    <Words words={props.words} conjugations={props.conjugations} declensions={props.declensions} />
-);
 
 export { Learn };
