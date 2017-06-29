@@ -1,4 +1,5 @@
 import React from 'react';
+import './learn.css';
 import { Grammar, QuizInput } from './grammar/grammar.js';
 
 // TODO: Generalize the Latin specific grammar into a library, so a Latin or Greek object can be passed as
@@ -154,42 +155,44 @@ class Learn extends React.Component {
     render () {
         return (
             <div>
-                <fieldset>
-                    <legend>Latin { this.state.correct ? '- Correct!' : '' }</legend>
-                    <Words words={this.props.card.anteInput}
-                           onClick={this.showWordInfo}
-                           conjugations={this.props.conjugations}
-                           declensions={this.props.declensions} />
-                    <QuizInput placeholder=""
-                               answer={this.props.card.input.form}
-                               className="learningQuizInput"
-                               size={this.props.card.input.form.length}
-                               correctClass="correct"
-                               incorrectClass="incorrect"
-                               onChange={this.onChange} />
-                    <Words words={this.props.card.postInput}
-                           onClick={this.showWordInfo}
-                           conjugations={this.props.conjugations}
-                           declensions={this.props.declensions} />
-                    <hr />
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>Translation</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>Literal</td>
-                            <td>{ this.props.card.literalTranslation }</td>
-                        </tr>
-                        <tr>
-                            <td>Idiomatic</td>
-                            <td>{ this.props.card.idiomaticTranslation }</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </fieldset>
+                <div className="centered">
+                    <fieldset>
+                        <legend>Latin { this.state.correct ? '- Correct!' : '' }</legend>
+                        <Words words={this.props.card.anteInput}
+                               onClick={this.showWordInfo}
+                               conjugations={this.props.conjugations}
+                               declensions={this.props.declensions} />
+                        <QuizInput placeholder=""
+                                   answer={this.props.card.input.form}
+                                   className="learningQuizInput"
+                                   size={this.props.card.input.form.length}
+                                   correctClass="correct"
+                                   incorrectClass="incorrect"
+                                   onChange={this.onChange} />
+                        <Words words={this.props.card.postInput}
+                               onClick={this.showWordInfo}
+                               conjugations={this.props.conjugations}
+                               declensions={this.props.declensions} />
+                        <hr />
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>Translation</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Literal</td>
+                                <td>{ this.props.card.literalTranslation }</td>
+                            </tr>
+                            <tr>
+                                <td>Idiomatic</td>
+                                <td>{ this.props.card.idiomaticTranslation }</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </fieldset>
+                </div>
 
                 { this.state.wordInfo ? (
                     <div>

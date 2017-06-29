@@ -1,0 +1,16 @@
+$pewter-blue: #8DAA9D;
+
+/* This centers the box. */
+.centered {
+  display: table;
+  margin: 0 auto;
+}
+
+.learningQuizInput {
+  display: inline-block;
+  border: none;
+  outline: none;
+  padding: 10px;
+  background-color: $pewter-blue;
+  margin-right: 0.5em;
+}
