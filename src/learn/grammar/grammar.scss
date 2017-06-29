@@ -14,3 +14,11 @@ $smoky-black: #0F0E0E;
   background-color: lightcoral;
   color: $smoky-black;
 }
+
+.learningQuizInput {
+  display: inline-block;
+  border: none;
+  outline: none;
+  padding: 10px;
+  background-color: $pewter-blue;
+}

@@ -25,6 +25,44 @@ const GrammarTable = props => (
     </div>
 );
 
+class QuizInput extends React.Component {
+    constructor (props) {
+        super(props);
+
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange (event) {
+        const correct = this.props.correctClass;
+        const incorrect = this.props.incorrectClass;
+        event.target.value = event.target.value.toLocaleLowerCase();
+        const desiredClass = (event.target.value === event.target.placeholder) ? correct : incorrect;
+        const hasCorrectClassName = event.target.className.indexOf(` ${desiredClass}`) >= 0;
+        // If the input is not colored to match the correctness of the input, remove the incorrect class,
+        // if present, and append the correct class.
+        // Otherwise, when it is '', it should be the default color to indicate it has not been attempted
+        // or that it has been reset, so remove any correctness classes (i.e. remove both correct & incorrect).
+        if (!hasCorrectClassName && event.target.value !== '') {
+            const wrongClass = (desiredClass === correct) ? incorrect : correct;
+            if (event.target.className.indexOf(wrongClass) >= 0) {
+                event.target.className = event.target.className.split(wrongClass).join('');
+            }
+            event.target.className += ` ${desiredClass}`;
+        } else if (event.target.value === '') {
+            event.target.className = event.target.className.split(correct).join('').split(incorrect).join('');
+        }
+    }
+
+    render () {
+        return (
+            <input className={`form-control ${this.props.className}`}
+                   type="text"
+                   onChange={this.handleChange}
+                   placeholder={this.props.placeholder} />
+        );
+    }
+}
+
 // props = { className, data, headers }
 class GrammarQuizTable extends React.Component {
     constructor (props) {
@@ -38,39 +76,14 @@ class GrammarQuizTable extends React.Component {
         partialState.inputData = Object.create(props.data);
         partialState.inputData.table = partialState.inputData.table.map((row, rowIndex) => (
             row.map((col, index) => (
-                index === 0 ? col : <input key={index}
-                                           className="form-control"
-                                           type="text"
-                                           onChange={this.handleChange}
-                                           placeholder={col} />
+                index === 0 ? col : <QuizInput key={index}
+                                               placeholder={col}
+                                               correctClass="correct"
+                                               incorrectClass="incorrect" />
             ))
         ));
 
         this.state = partialState;
-
-        this.handleChange = this.handleChange.bind(this);
-    }
-
-    // Normalizes the text in the input boxes (by converting all text to lower case), and updates the
-    // classes associated with each input object to give color indication to the user that they have
-    // correctly or incorrectly typed the entry.
-    handleChange (event) {
-        event.target.value = event.target.value.toLocaleLowerCase();
-        const desiredClass = (event.target.value === event.target.placeholder) ? 'correct' : 'incorrect';
-        const hasCorrectClassName = event.target.className.indexOf(` ${desiredClass}`) >= 0;
-        // If the input is not colored to match the correctness of the input, remove the incorrect class,
-        // if present, and append the correct class.
-        // Otherwise, when it is '', it should be the default color to indicate it has not been attempted
-        // or that it has been reset, so remove any correctness classes (i.e. remove both correct & incorrect).
-        if (!hasCorrectClassName && event.target.value !== '') {
-            const wrongClass = (desiredClass === 'correct') ? 'incorrect' : 'correct';
-            if (event.target.className.indexOf(wrongClass) >= 0) {
-                event.target.className = event.target.className.split(wrongClass).join('');
-            }
-            event.target.className += ` ${desiredClass}`;
-        } else if (event.target.value === '') {
-            event.target.className = event.target.className.split(/(?:in)?correct/).join('');
-        }
     }
 
     render () {
@@ -133,4 +146,4 @@ const Grammar = props => (
     </div>
 );
 
-export { Grammar, GrammarTable };
+export { Grammar, GrammarTable, QuizInput };
