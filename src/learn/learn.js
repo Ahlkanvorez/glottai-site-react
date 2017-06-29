@@ -1,6 +1,23 @@
 import React from 'react';
 import { Grammar } from './grammar/grammar.js';
 
+// props = { word, conjugation, declension }
+const WordInfo = props => (
+    <div>
+        { props.word ? (
+            <div>
+                <dl>
+                    <dt>{ props.word.dictionaryEntry }</dt>
+                    <dd>({ props.word.type }) { props.word.definition }</dd>
+
+                </dl>
+                <Grammar conjugations={[props.conjugation]}
+                         declensions={[props.declension]} />
+            </div>
+        ) : null }
+    </div>
+);
+
 // { words, conjugations, declensions }
 class Learn extends React.Component {
     constructor (props) {
@@ -74,21 +91,9 @@ class Learn extends React.Component {
                         )) }
                     </ul>
                 </div>
-                <div className="row">
-                    { this.state.word ? (
-                        <div class="col-md-4">
-                            <dl>
-                                <dt>{ this.state.word.dictionaryEntry }</dt>
-                                <dd>({this.state.word.type}) { this.state.word.definition }</dd>
-
-                            </dl>
-                            { this.state.conjugation ? (
-                                <Grammar conjugations={[this.state.conjugation]}
-                                         declensions={[this.state.declension]} />
-                            ) : null }
-                        </div>
-                    ) : null }
-                </div>
+                <WordInfo word={this.state.word}
+                          conjugation={this.state.conjugation}
+                          declension={this.state.declension} />
             </div>
         );
     }
