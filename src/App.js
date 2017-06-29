@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import './App.css';
-import { Grammar } from './grammar/grammar.js';
+import { Grammar } from './learn/grammar/grammar.js';
 import { Navigation } from './navigation.js';
 import { About } from './about.js';
+import { Learn } from './learn/learn.js';
 
 
 const firstConjugation = {
-    name: 'First Conjugation',
-    theme: 'long a',
+    name: 'First',
+    theme: 'ā',
     data: [
         {
             tense: "Present",
@@ -32,8 +33,8 @@ const firstConjugation = {
     ]
 };
 const secondConjugation = {
-    name: 'Second Conjugation',
-    theme: 'long e',
+    name: 'Second',
+    theme: 'ē',
     data: [
         {
             tense: 'Present',
@@ -57,7 +58,33 @@ const secondConjugation = {
         }
     ]
 };
-const conjugations = [firstConjugation, secondConjugation];
+const irregularConjugations = {
+    name: 'Irregular',
+    dictionaryEntry: 'sum esse fuī futūrum',
+    data: [
+        {
+            tense: 'Present',
+            mood: 'Indicative',
+            voice: 'Active',
+            table: [
+                ["1st", "sum", "sumus"],
+                ["2nd", "es", "estis"],
+                ["3rd", "est", "sunt"]
+            ]
+        },
+        {
+            tense: 'Perfect',
+            mood: 'Indicative',
+            voice: 'Active',
+            table: [
+                ["1st", "fuī", "fuimus"],
+                ["2nd", "fuistī", "fuistis"],
+                ["3rd", "fuit", "fuērunt"]
+            ]
+        }
+    ]
+};
+const conjugations = [firstConjugation, secondConjugation, irregularConjugations];
 
 const firstDeclension = {
     name: 'First Declension',
@@ -102,28 +129,55 @@ const secondDeclension = {
 };
 const declensions = [firstDeclension, secondDeclension];
 
+const words = [
+    {
+        form: "placēre",
+        dictionaryEntry: 'placeō placēre placuī placitum',
+        definition: "to please, give pleasure, be approved, be pleasing, be agreeable, be acceptable, suit, satisfy",
+        lexicon: "http://www.perseus.tufts.edu/hopper/morph?l=placere&la=la#lexicon",
+        number: "Infinitive",
+        tense: "Present",
+        voice: "Active",
+        type: "verb",
+        conjugation: "Second"
+    },
+    {
+        form: "esse",
+        dictionaryEntry: 'sum esse fuī futūrum',
+        definition: "to be, exist, live",
+        lexicon: "http://www.perseus.tufts.edu/hopper/morph?l=esse&la=la#lexicon",
+        number: "Infinitive",
+        tense: "Present",
+        voice: "Active",
+        type: "verb",
+        conjugation: "Irregular"
+    }
+];
+
 class App extends Component {
-    constructor(props) {
+    constructor (props) {
         super(props);
-        this.state = { view: 'Grammar' };
+        this.state = { view: 'learn' };
 
         this.handleViewChange = this.handleViewChange.bind(this);
     }
 
-    handleViewChange(view) {
+    handleViewChange (view) {
         this.setState({ view });
     }
 
-    render() {
+    render () {
         const selectView = view => {
-            switch (view) {
-                case 'Grammar':
+            switch (view.toLowerCase()) {
+                case 'grammar':
                     return (<Grammar conjugations={conjugations}
                                      declensions={declensions} />);
-                case 'About':
+                case 'about':
                     return (<About />);
-                default: // 'Learn'
-                    return (<p>This view is still under development.</p>);
+                default:
+                    return (<Learn words={words}
+                                   conjugations={conjugations}
+                                   declensions={declensions} />);
             }
         };
         return (
