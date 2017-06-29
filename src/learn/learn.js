@@ -1,6 +1,8 @@
 import React from 'react';
 import { Grammar } from './grammar/grammar.js';
 
+// TODO: Generalize the Latin specific grammar into a library, so a Latin or Greek object can be passed as
+// TODO: (continued) a parameter and handle all of the specific gramamr for each language.
 const WordDefinition = props => (
     <dl>
         <dt>{ props.word.dictionaryEntry }</dt>
@@ -32,8 +34,18 @@ class Word extends React.Component {
         this.getDeclension = this.getDeclension.bind(this);
     }
 
+    // TODO: Improve code reuse between getDeclension and getConjugation.
     getDeclension () {
-        // TODO: Retrieve the proper declension for the word.
+        if (this.props.word.type.indexOf('noun') >= 0 || this.props.word.type.indexOf('adjective') >= 0) {
+            const declensions = this.props.declensions
+                .filter(declension => (
+                    declension.name.toLocaleLowerCase() === this.props.word.declension.toLocaleLowerCase()
+                ));
+            if (this.props.word.declension !== 'Irregular') {
+                return declensions[0];
+            }
+            return declensions.filter(declension => declension.dictionaryEntry === this.props.word.dictionaryEntry)[0];
+        }
     }
 
     getConjugation () {
@@ -50,13 +62,24 @@ class Word extends React.Component {
         // If word is not a verb, undefined should be the result.
     }
 
-    getStem() {
+    getStem(conjugation, declension) {
         if (this.props.word.type === 'verb') {
             // If the word is a verb, then the dictionary entry is the principal parts,
             // and the stem is the second principal part minus the infinitive ending.
             return this.props.word.dictionaryEntry.split(' ')[1].slice(0, -3);
         } else if (this.props.word.type === 'noun' || this.props.word.type === 'adjective') {
-            // TODO: Do the same for nouns and adjectives.
+            // If the word is a noun or adjective, then the stem is the result of removing the case ending
+            // from the genitive singular form. If it is a noun, the genitive singular is the second word
+            // in the dictionary entry; if it is an adjective with one ending, it is derived just as a noun;
+            // if it is an adjective of two endings, the stem can be derived from removing the nom.neut.sg. ending
+            // from the second word in the dictionary entry; if it is an adjective of three endings, the stem can
+            // be derived from removing the nom.fem.sg. ending from the second word in the dictionary entry.
+            if (this.props.word.type === 'noun' || this.props.word.dictionaryEntry.split(' ').length === 2) {
+                const genSg = declension.data.filter(x => x.gender === this.props.word.gender)[0].table[1][1];
+                // The - allows indexing from the end of the string, and the added 1 accounts for the fact that .length
+                // is 1 greater in magnitude than the desired index.
+                return this.props.word.dictionaryEntry.split(' ')[1].slice(0, 1 - genSg.length);
+            }
         }
     }
 
@@ -67,16 +90,24 @@ class Word extends React.Component {
         conjugation = conjugation ? JSON.parse(JSON.stringify(conjugation)) : undefined;
         declension = declension ? JSON.parse(JSON.stringify(declension)) : undefined;
         if (conjugation) {
-            let stem = this.getStem(this.props.word, conjugation);
+            let stem = this.getStem(conjugation, declension);
             conjugation.data = conjugation.data.map(data => {
                 data.table = data.table.map(row => (
-                    row.map((col, index) => (index === 0 || this.props.word.conjugation === 'Irregular') ? col : (stem + col.slice(1)))
+                    row.map((col, index) => (index === 0 || this.props.word.conjugation === 'Irregular')
+                        ? col : (stem + col.slice(1)))
                 ));
                 return data;
             });
         }
         if (declension) {
-            // TODO: do the same for nouns & adjectives
+            let stem = this.getStem(conjugation, declension);
+            declension.data = declension.data.map(data => {
+                data.table = data.table.map(row => (
+                    row.map((col, index) => (index === 0 || this.props.word.declension === 'Irregular')
+                        ? col : (stem + col.slice(1)))
+                ));
+                return data;
+            });
         }
         this.props.onClick(this.props.word, conjugation, declension);
     }

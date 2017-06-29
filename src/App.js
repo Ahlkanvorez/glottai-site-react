@@ -58,7 +58,7 @@ const secondConjugation = {
         }
     ]
 };
-const irregularConjugations = {
+const irregularConjugationSumEsse = {
     name: 'Irregular',
     dictionaryEntry: 'sum esse fuī futūrum',
     data: [
@@ -84,13 +84,13 @@ const irregularConjugations = {
         }
     ]
 };
-const conjugations = [firstConjugation, secondConjugation, irregularConjugations];
+const conjugations = [firstConjugation, secondConjugation, irregularConjugationSumEsse];
 
 const firstDeclension = {
-    name: 'First Declension',
+    name: 'First',
     data: [
         {
-            gender: "f.",
+            gender: "f",
             table: [
                 ["Nom./Voc.", "-a", "-ae"],
                 ["Gen.", "-ae", "-ārum"],
@@ -102,10 +102,10 @@ const firstDeclension = {
     ]
 };
 const secondDeclension = {
-    name: 'Second Declension',
+    name: 'Second',
     data: [
         {
-            gender: "m.",
+            gender: "m",
             table: [
                 ["Nom.", "-us/er", "-ī"],
                 ["Gen.", "-ī", "-ōrum"],
@@ -116,7 +116,7 @@ const secondDeclension = {
             ]
         },
         {
-            gender: "n.",
+            gender: "n",
             table: [
                 ["Nom./Voc.", "-um", "-a"],
                 ["Gen.", "-ī", "-ōrum"],
@@ -127,9 +127,45 @@ const secondDeclension = {
         }
     ]
 };
-const declensions = [firstDeclension, secondDeclension];
+const irregularDeclensionEgo = {
+    name: 'Irregular',
+    dictionaryEntry: 'egō, meī',
+    data: [
+        {
+            table: [
+                ['Nom.', 'egō', 'nōs'],
+                ['Gen.', 'meī', 'nostrum'],
+                ['Dat.', 'mihi', 'nōbis'],
+                ['Acc.', 'mē', 'nōs'],
+                ['Abl.', 'mē', 'nōbīs']
+            ]
+        }
+    ]
+};
+const declensions = [firstDeclension, secondDeclension, irregularDeclensionEgo];
 
 const words = [
+    {
+        form: 'nātūra',
+        dictionaryEntry: 'nātūra, nātūrae f.',
+        definition: 'Nature; (fig.) the property, quality, inclination, or essence of a thing',
+        lexicon: 'http://www.perseus.tufts.edu/hopper/morph?l=natura&la=la#lexicon',
+        caseName: 'Nominative',
+        number: 'Singular',
+        gender: 'f',
+        type: 'noun',
+        declension: 'First'
+    },
+    {
+        form: 'mihi',
+        dictionaryEntry: 'egō, meī',
+        definition: 'me',
+        lexicon: 'http://www.perseus.tufts.edu/hopper/morph?l=mihi&la=la',
+        caseName: 'Dative',
+        number: 'Singular',
+        type: 'personal pronoun',
+        declension: 'Irregular'
+    },
     {
         form: "placēre",
         dictionaryEntry: 'placeō placēre placuī placitum',

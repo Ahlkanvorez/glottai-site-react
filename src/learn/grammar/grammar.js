@@ -111,7 +111,7 @@ const Conjugation = props => {
 const Declension = props => {
     const makeDeclensionKey = data => data.name + ' ' + data.gender;
     return (
-        <GrammarInfo title={props.declension.name}
+        <GrammarInfo title={props.declension.name + ' Declension'}
                  data={props.declension.data}
                  headers={ [ 'Case', 'Sg.', 'Pl.' ] }
                  makeKey={makeDeclensionKey} />
