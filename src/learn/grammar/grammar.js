@@ -99,7 +99,7 @@ const GrammarInfo = props => (
 const Conjugation = props => {
     const makeConjugationKey = data => data.tense + ' ' + data.mood + ' ' + data.voice;
     return (
-        <GrammarInfo title={ props.conjugation.name +
+        <GrammarInfo title={ `${props.conjugation.name} Conjugation` +
         (props.conjugation.theme ? '(' + props.conjugation.theme + ')' : '') }
                  data={props.conjugation.data}
                  headers={ ['Person', 'Sg.', 'Pl.'] }
