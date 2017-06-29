@@ -1,18 +1,21 @@
 import React from 'react';
 import { Grammar } from './grammar/grammar.js';
 
+const WordDefinition = props => (
+    <dl>
+        <dt>{ props.word.dictionaryEntry }</dt>
+        <dd>({ props.word.type }) { props.word.definition }</dd>
+    </dl>
+);
+
 // props = { word, conjugation, declension }
 const WordInfo = props => (
     <div>
         { props.word ? (
             <div>
-                <dl>
-                    <dt>{ props.word.dictionaryEntry }</dt>
-                    <dd>({ props.word.type }) { props.word.definition }</dd>
-
-                </dl>
-                <Grammar conjugations={[props.conjugation]}
-                         declensions={[props.declension]} />
+                <WordDefinition word={ props.word } />
+                <Grammar conjugations={ [props.conjugation] }
+                         declensions={ [props.declension] } />
             </div>
         ) : null }
     </div>
