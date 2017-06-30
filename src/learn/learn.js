@@ -3,7 +3,7 @@ import './learn.css';
 import { Grammar, QuizInput } from './grammar/grammar.js';
 
 // TODO: Generalize the Latin specific grammar into a library, so a Latin or Greek object can be passed as
-// TODO: (continued) a parameter and handle all of the specific gramamr for each language.
+// TODO: (continued) a parameter and handle all of the specific grammar for each language.
 const WordDefinition = props => (
     <dl>
         <dt>{ props.word.dictionaryEntry }</dt>
@@ -75,11 +75,24 @@ class Word extends React.Component {
             // if it is an adjective of two endings, the stem can be derived from removing the nom.neut.sg. ending
             // from the second word in the dictionary entry; if it is an adjective of three endings, the stem can
             // be derived from removing the nom.fem.sg. ending from the second word in the dictionary entry.
-            if (this.props.word.type === 'noun' || this.props.word.dictionaryEntry.split(' ').length === 2) {
-                const genSg = declension.data.find(x => x.gender === this.props.word.gender).table[1][1];
-                // The - allows indexing from the end of the string, and the added 1 accounts for the fact that .length
-                // is 1 greater in magnitude than the desired index.
-                return this.props.word.dictionaryEntry.split(' ')[1].slice(0, 1 - genSg.length);
+            if (this.props.word.type === 'adjective' && this.props.word.dictionaryEntry.split(' ').length === 3) {
+                if (this.props.word.dictionaryEntry.split(' ')[1] !== 'gen.') {
+                    // [0][1] is the nom.sg.f. entry for an adjective of three endings.
+                    const ending = declension.data.find(x => x.gender === this.props.word.gender).table[0][1];
+                    // The - allows indexing from the end of the string, and the slice(1) removes the prefixed '-' on the ending
+                    return this.props.word.dictionaryEntry.split(' ')[1].slice(0, -ending.slice(1).length);
+                } else {
+                    // [0][2] is the nom.sg.n. entry for an adjective of three endings.
+                    const ending = declension.data.find(x => x.gender === this.props.word.gender).table[0][2];
+                    // The - allows indexing from the end of the string, and the slice(1) removes the prefixed '-' on the ending
+                    return this.props.word.dictionaryEntry.split(' ')[1].slice(0, -ending.slice(1).length);
+                }
+            }
+            if (this.props.word.type === 'noun') {
+                // [1][1] is the gen.sg. entry for a noun.
+                const ending = declension.data.find(x => x.gender === this.props.word.gender).table[1][1];
+                // The - allows indexing from the end of the string, and the slice(1) removes the prefixed '-' on the ending
+                return this.props.word.dictionaryEntry.split(' ')[1].slice(0, -ending.slice(1).length);
             }
         }
     }
@@ -135,7 +148,7 @@ const Words = props => (
     </span>
 );
 
-class Learn extends React.Component {
+class Quiz extends React.Component {
     constructor (props) {
         super(props);
         this.state = {};
@@ -145,11 +158,20 @@ class Learn extends React.Component {
     }
 
     showWordInfo (word, conjugation, declension) {
-        this.setState({ wordInfo: <WordInfo word={word} conjugation={conjugation} declension={declension} /> });
+        this.setState({ word, conjugation, declension });
     }
 
     onChange (correct) {
+        console.log(correct);
         this.setState({correct});
+        if (correct) {
+            this.props.onCorrect();
+        }
+    }
+
+    componentWillReceiveProps (props) {
+        console.log(props);
+        this.setState({ correct: 'false', word: props.word });
     }
 
     render () {
@@ -194,13 +216,40 @@ class Learn extends React.Component {
                     </fieldset>
                 </div>
 
-                { this.state.wordInfo ? (
+                { this.state.word ? (
                     <div>
                         <hr />
-                        { this.state.wordInfo }
+                        <WordInfo word={this.state.word}
+                                  conjugation={this.state.conjugation}
+                                  declension={this.state.declension} />
                     </div>
                 ) : null }
             </div>
+        );
+    }
+}
+
+class Learn extends React.Component {
+    constructor (props) {
+        super(props);
+        this.state = { cardIndex: 0 };
+
+        this.nextCard = this.nextCard.bind(this);
+    }
+
+    nextCard () {
+        // TODO: fix bug where, after answering one question, if you click on two words of the same declension,
+        // TODO: (continued) the table for their forms shows the first of the two after clicking the second.
+        this.setState({ cardIndex: (this.state.cardIndex + 1) % this.props.cards.length });
+    }
+
+    render () {
+        return (
+            <Quiz card={this.props.cards[this.state.cardIndex]}
+                  words={this.props.words}
+                  conjugations={this.props.conjugations}
+                  declensions={this.props.declensions}
+                  onCorrect={this.nextCard} />
         );
     }
 }

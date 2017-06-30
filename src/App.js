@@ -147,7 +147,7 @@ const declensions = [firstDeclension, secondDeclension, irregularDeclensionEgo];
 const words = [
     {
         form: 'nātūra',
-        dictionaryEntry: 'nātūra, nātūrae f.',
+        dictionaryEntry: 'nātūra nātūrae f.',
         definition: 'Nature; (fig.) the property, quality, inclination, or essence of a thing',
         lexicon: 'http://www.perseus.tufts.edu/hopper/morph?l=natura&la=la#lexicon',
         caseName: 'Nominative',
@@ -157,8 +157,30 @@ const words = [
         declension: 'First'
     },
     {
+        form: 'aurae',
+        dictionaryEntry: 'aura aurae f.',
+        definition: 'the air (in motion), a breeze, breath of air, wind, blast',
+        lexicon: 'http://www.perseus.tufts.edu/hopper/morph?l=aura&la=la#lexicon',
+        caseName: 'Genitive',
+        number: 'Singular',
+        gender: 'f',
+        type: 'noun',
+        declension: 'first'
+    },
+    {
+        form: 'mōta',
+        dictionaryEntry: 'mōtus mōta mōtum',
+        definition: 'having been moved, shaken, stirred',
+        lexicon: 'http://www.perseus.tufts.edu/hopper/morph?l=motus&la=la#lexicon',
+        caseName: 'Nominative',
+        number: 'Singular',
+        gender: 'f',
+        type: 'adjective',
+        declension: 'first'
+    },
+    {
         form: 'mihi',
-        dictionaryEntry: 'egō, meī',
+        dictionaryEntry: 'egō meī',
         definition: 'me',
         lexicon: 'http://www.perseus.tufts.edu/hopper/morph?l=mihi&la=la',
         caseName: 'Dative',
@@ -180,13 +202,15 @@ const words = [
         conjugation: "Second"
     },
     {
-        form: "esse",
+        form: "est",
         dictionaryEntry: 'sum esse fuī futūrum',
         definition: "to be, exist, live",
         lexicon: "http://www.perseus.tufts.edu/hopper/morph?l=esse&la=la#lexicon",
-        number: "Infinitive",
+        person: "3rd",
+        number: "Singular",
         tense: "Present",
         voice: "Active",
+        mood: "Indicative",
         type: "verb",
         conjugation: "Irregular"
     }
@@ -199,6 +223,18 @@ const cards = [
         input: words.find(w => w.form === 'mihi'),
         literalTranslation: 'Nature has pleased me.',
         idiomaticTranslation: 'I have enjoyed nature'
+    },
+    {
+        anteInput: [
+            words.find(w => w.form === 'nātūra'),
+            words.find(w => w.form === 'aurae')
+        ],
+        postInput: [
+            words.find(w => w.form === 'mōta')
+        ],
+        input: words.find(w => w.form === 'est'),
+        literalTranslation: 'The direction of the wind has been moved',
+        idiomaticTranslation: 'The wind has changed direction'
     }
 ];
 
@@ -223,7 +259,7 @@ class App extends Component {
                 case 'about':
                     return (<About />);
                 default:
-                    return (<Learn card={cards[0]}
+                    return (<Learn cards={cards}
                                    words={words}
                                    conjugations={conjugations}
                                    declensions={declensions} />);
