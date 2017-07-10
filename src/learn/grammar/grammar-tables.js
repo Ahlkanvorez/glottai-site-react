@@ -58,46 +58,54 @@ class GrammarQuizTable extends React.Component {
 class QuizInput extends React.Component {
     constructor (props) {
         super(props);
-        this.state = { answer: '' };
+        this.state = { answer: '', className: this.props.className || '' };
 
         this.handleChange = this.handleChange.bind(this);
     }
 
-    componentWillReceiveProps (props) {
-        if (props.answer !== this.props.answer) {
-            this.setState({ answer: '' });
+    componentWillReceiveProps ({ answer, className }) {
+        if (answer !== this.props.answer) {
+            this.setState({ answer: '', className: className || '' });
         }
     }
 
+    // TODO: Correct bug where colors do not change in inputs.
     handleChange (event) {
-        const { correct, incorrect } = this.props;
-        const answer = event.target.value.toLocaleLowerCase();
-        this.setState({ answer });
+        const { correct, incorrect, answer } = this.props;
+        const guess = event.target.value.toLocaleLowerCase();
+        let className = event.target.className || '';
 
-        const desiredClass = (answer === this.props.answer) ? correct : incorrect;
         // If the input is not colored to match the correctness of the input, remove the incorrect class,
         // if present, and append the correct class.
         // Otherwise, when it is '', it should be the default color to indicate it has not been attempted
         // or that it has been reset, so remove any correctness classes (i.e. remove both correct & incorrect).
-        if (!event.target.className.includes(` ${desiredClass}`) && answer !== '') {
+        const desiredClass = (guess === answer) ? correct : incorrect;
+        if (!className.includes(` ${desiredClass}`) && guess !== '') {
             const wrongClass = (desiredClass === correct) ? incorrect : correct;
-            if (event.target.className.includes(` ${wrongClass}`)) {
-                event.target.className = event.target.className.split(wrongClass).join('');
+
+            // if it contains the wrong class, remove it and append the correct class.
+            if (className.includes(` ${wrongClass}`)) {
+                className = className.split(wrongClass).join('');
             }
-            event.target.className += ` ${desiredClass}`;
-        } else if (answer === '') {
-            event.target.className = event.target.className.split(correct).join('').split(incorrect).join('');
+            className += ` ${desiredClass}`;
+        } else if (guess === '') {
+            // Remove both correct & incorrect classes.
+            className = className.split(correct).join('').split(incorrect).join('');
         }
+        console.log(className);
+        console.log(guess);
+
+        this.setState({ answer: guess, className });
 
         // If the value is correct, call the callback for a correct answer.
         if (this.props.onChange) {
-            this.props.onChange(answer === this.props.answer);
+            this.props.onChange(guess === answer);
         }
     }
 
     render () {
         return (
-            <input className={this.props.className}
+            <input className={this.state.className}
                    type="text"
                    size={this.props.size}
                    value={this.state.answer}
