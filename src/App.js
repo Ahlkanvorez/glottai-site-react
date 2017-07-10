@@ -5,7 +5,7 @@ import { Navigation } from './navigation.js';
 import { About } from './about.js';
 import { Learn } from './learn/learn.js';
 
-
+// TODO: Extract all Latin grammar into a file 'latin-grammar.json'
 const firstConjugation = {
     name: 'First',
     theme: 'ā',
