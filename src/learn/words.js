@@ -24,7 +24,6 @@ const WordInfo = ({ word, conjugation, declension }) => (
     </div>
 );
 
-// { word, conjugations, declensions }
 class Word extends React.Component {
     constructor (props) {
         super(props);
@@ -33,8 +32,16 @@ class Word extends React.Component {
     }
 
     showInfo () {
-        const { word } = this.props;
-        this.props.onClick(word, Latin.getFormTables(word));
+        const { word, language } = this.props;
+
+        let tables;
+        switch (language.toLocaleLowerCase()) {
+            case 'latin':
+                tables = Latin.getFormTables(word);
+                break;
+            // TODO: Add support for Greek.
+        }
+        this.props.onClick(word, tables);
     }
 
     render () {
@@ -47,13 +54,12 @@ class Word extends React.Component {
     }
 }
 
-const Words = ({ words, conjugations, declensions, onClick }) => (
+const Words = ({ words, onClick, language }) => (
     <span>
         { words.map((w, index) =>
             <span key={w.form + '_' + index} style={{ marginRight: "0.5em" }}>
                 <Word word={w}
-                      conjugations={conjugations}
-                      declensions={declensions}
+                      language={language}
                       onClick={onClick} />
             </span>
         ) }

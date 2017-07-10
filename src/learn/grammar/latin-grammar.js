@@ -81,7 +81,6 @@ const Latin = {
         // Clone the tables to prevent alteration of the originals
         grammar = grammar ? JSON.parse(JSON.stringify(grammar)) : undefined;
 
-        console.log({ word, g: { grammarType, grammar }});
         if (grammarType === 'conjugation') {
             const stem = this.getStem(word, { grammarType, grammar });
             grammar.data = grammar.data.map(data => {
