@@ -17,8 +17,8 @@ const WordInfo = ({ word, conjugation, declension }) => (
             <div>
                 <WordDefinition word={ word } />
                 <a href={word.lexicon}>Lexicon</a>
-                <Grammar conjugations={ [conjugation] }
-                         declensions={ [declension] } />
+                <Grammar conjugations={ conjugation ? [conjugation] : [] }
+                         declensions={ declension ? [declension] : [] } />
             </div>
         ) : null }
     </div>
@@ -34,7 +34,7 @@ class Word extends React.Component {
 
     showInfo () {
         const { word } = this.props;
-        this.props.onClick(word, Latin.getFormTables(word, Latin.getGrammar(word)));
+        this.props.onClick(word, Latin.getFormTables(word));
     }
 
     render () {

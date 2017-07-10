@@ -64,28 +64,25 @@ class QuizInput extends React.Component {
     }
 
     componentWillReceiveProps (props) {
-        console.log('In QuizInput');
-        console.log(props);
         if (props.answer !== this.props.answer) {
             this.setState({ answer: '' });
         }
     }
 
     handleChange (event) {
-        this.setState({ answer: event.target.value.toLocaleLowerCase() });
-
+        const { correct, incorrect } = this.props;
         const answer = event.target.value.toLocaleLowerCase();
-        const correct = this.props.correctClass;
-        const incorrect = this.props.incorrectClass;
+        this.setState({ answer });
+
         const desiredClass = (answer === this.props.answer) ? correct : incorrect;
-        const hasCorrectClassName = event.target.className.indexOf(` ${desiredClass}`) >= 0;
+        const hasCorrectClassName = event.target.className.includes(` ${desiredClass}`);
         // If the input is not colored to match the correctness of the input, remove the incorrect class,
         // if present, and append the correct class.
         // Otherwise, when it is '', it should be the default color to indicate it has not been attempted
         // or that it has been reset, so remove any correctness classes (i.e. remove both correct & incorrect).
         if (!hasCorrectClassName && answer !== '') {
             const wrongClass = (desiredClass === correct) ? incorrect : correct;
-            if (event.target.className.indexOf(wrongClass) >= 0) {
+            if (event.target.className.includes(wrongClass)) {
                 event.target.className = event.target.className.split(wrongClass).join('');
             }
             event.target.className += ` ${desiredClass}`;

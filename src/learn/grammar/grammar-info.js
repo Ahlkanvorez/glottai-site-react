@@ -13,8 +13,9 @@ const GrammarInfo = ({ title, data, makeKey, headers }) => (
     </div>
 );
 
-const Conjugation = ({ data: { tense, mood, voice }, conjugation: { name, theme, data } }) => {
-    const makeConjugationKey = data => tense + ' ' + mood + ' ' + voice;
+const Conjugation = ({ conjugation: { name, theme, data } }) => {
+    const makeConjugationKey = data => data.tense + ' ' + data.mood + ' ' + data.voice;
+    console.log(data);
     return (
         <GrammarInfo title={ `${name} Conjugation` +
         (theme ? '(' + theme + ')' : '') }
@@ -24,10 +25,10 @@ const Conjugation = ({ data: { tense, mood, voice }, conjugation: { name, theme,
     );
 };
 
-const Declension = ({ data: { name, gender }, declension: { name: declensionName, data } }) => {
-    const makeDeclensionKey = data => name + ' ' + gender;
+const Declension = ({ declension: { name, data } }) => {
+    const makeDeclensionKey = data => data.name + ' ' + data.gender;
     return (
-        <GrammarInfo title={declensionName + ' Declension'}
+        <GrammarInfo title={name + ' Declension'}
                      data={data}
                      headers={ [ 'Case', 'Sg.', 'Pl.' ] }
                      makeKey={makeDeclensionKey} />

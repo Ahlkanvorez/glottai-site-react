@@ -12,7 +12,11 @@ class Quiz extends React.Component {
         this.onChange = this.onChange.bind(this);
     }
 
-    showWordInfo (word, conjugation, declension) {
+    showWordInfo (word, { grammarType, grammar }) {
+        const [ conjugation, declension ] = [
+            grammarType === 'conjugation' ? grammar : undefined,
+            grammarType === 'declension' ? grammar : undefined
+        ];
         this.setState({ word, conjugation, declension });
     }
 
