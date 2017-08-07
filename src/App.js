@@ -10,8 +10,10 @@ const words = [
     {
         form: 'nātūra',
         dictionaryEntry: 'nātūra nātūrae f.',
-        definition: 'Nature; (fig.) the property, quality, inclination, or essence of a thing',
-        lexicon: 'http://www.perseus.tufts.edu/hopper/morph?l=natura&la=la#lexicon',
+        definition: 'Nature; (fig.) the property, quality, inclination, or '
+            + 'essence of a thing',
+        lexicon:
+            'http://www.perseus.tufts.edu/hopper/morph?l=natura&la=la#lexicon',
         caseName: 'Nominative',
         number: 'Singular',
         gender: 'f',
@@ -22,7 +24,8 @@ const words = [
         form: 'aurae',
         dictionaryEntry: 'aura aurae f.',
         definition: 'the air (in motion), a breeze, breath of air, wind, blast',
-        lexicon: 'http://www.perseus.tufts.edu/hopper/morph?l=aura&la=la#lexicon',
+        lexicon:
+            'http://www.perseus.tufts.edu/hopper/morph?l=aura&la=la#lexicon',
         caseName: 'Genitive',
         number: 'Singular',
         gender: 'f',
@@ -33,7 +36,8 @@ const words = [
         form: 'mōta',
         dictionaryEntry: 'mōtus mōta mōtum',
         definition: 'having been moved, shaken, stirred',
-        lexicon: 'http://www.perseus.tufts.edu/hopper/morph?l=motus&la=la#lexicon',
+        lexicon:
+            'http://www.perseus.tufts.edu/hopper/morph?l=motus&la=la#lexicon',
         caseName: 'Nominative',
         number: 'Singular',
         gender: 'f',
@@ -51,36 +55,39 @@ const words = [
         declension: 'Irregular'
     },
     {
-        form: "placuit",
+        form: 'placuit',
         dictionaryEntry: 'placeō placēre placuī placitum',
-        definition: "to please, give pleasure, be approved, be pleasing, be agreeable, be acceptable, suit, satisfy",
-        lexicon: "http://www.perseus.tufts.edu/hopper/morph?l=placere&la=la#lexicon",
+        definition: 'to please, give pleasure, be approved, be pleasing, be '
+            + 'agreeable, be acceptable, suit, satisfy',
+        lexicon:
+            'http://www.perseus.tufts.edu/hopper/morph?l=placere&la=la#lexicon',
         person: '3rd',
-        number: "Singular",
-        tense: "Perfect",
+        number: 'Singular',
+        tense: 'Perfect',
         mood: 'Indicative',
-        voice: "Active",
-        type: "verb",
-        conjugation: "Second"
+        voice: 'Active',
+        type: 'verb',
+        conjugation: 'Second'
     },
     {
-        form: "est",
+        form: 'est',
         dictionaryEntry: 'sum esse fuī futūrum',
-        definition: "to be, exist, live",
-        lexicon: "http://www.perseus.tufts.edu/hopper/morph?l=esse&la=la#lexicon",
-        person: "3rd",
-        number: "Singular",
-        tense: "Present",
-        voice: "Active",
-        mood: "Indicative",
-        type: "verb",
-        conjugation: "Irregular"
+        definition: 'to be, exist, live',
+        lexicon:
+            'http://www.perseus.tufts.edu/hopper/morph?l=esse&la=la#lexicon',
+        person: '3rd',
+        number: 'Singular',
+        tense: 'Present',
+        voice: 'Active',
+        mood: 'Indicative',
+        type: 'verb',
+        conjugation: 'Irregular'
     }
 ];
 const cards = [
     {
-        anteInput: [words.find(w => w.form === 'nātūra')],
-        postInput: [words.find(w => w.form === 'placuit')],
+        anteInput: [ words.find(w => w.form === 'nātūra') ],
+        postInput: [ words.find(w => w.form === 'placuit') ],
         input: words.find(w => w.form === 'mihi'),
         literalTranslation: 'Nature has pleased me.',
         idiomaticTranslation: 'I have enjoyed nature'
@@ -128,7 +135,7 @@ class App extends Component {
         return (
             <div>
                 <Navigation handleViewChange={this.handleViewChange} />
-                <div className="container" style={{ marginTop: '75px' }}>
+                <div className='container' style={{ marginTop: '75px' }}>
                     {selectView(this.state.view)}
                 </div>
             </div>

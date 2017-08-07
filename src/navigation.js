@@ -1,8 +1,7 @@
 import React from 'react';
 
-// props = { handleViewChange() }
-const Navigation = props => (
-    <div className="navbar navbar-inverse navbar-fixed-top" role="navigation">
+const Navigation = ({ handleViewChange }) => (
+    <div className="navbar navbar-fixed-top" role="navigation">
         <div className="container">
             <div className="navbar-header">
                 <button type="button" className="navbar-toggle"
@@ -13,24 +12,26 @@ const Navigation = props => (
                     <span className="icon-bar"></span>
                     <span className="icon-bar"></span>
                 </button>
-                <a className="navbar-brand" onClick={() => props.handleViewChange('Grammar')}>
+                <a className="navbar-brand"
+                        onClick={() => handleViewChange('Grammar')}>
                     γλῶτται
                 </a>
             </div>
-            <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <div className="collapse navbar-collapse"
+                    id="bs-example-navbar-collapse-1">
                 <ul className="nav navbar-nav">
                     <li>
-                        <a onClick={() => props.handleViewChange('Learn')}>
+                        <a onClick={() => handleViewChange('Learn')}>
                             Learn
                         </a>
                     </li>
                     <li>
-                        <a onClick={() => props.handleViewChange('Grammar')}>
+                        <a onClick={() => handleViewChange('Grammar')}>
                             Grammar
                         </a>
                     </li>
                     <li>
-                        <a onClick={() => props.handleViewChange('About')}>
+                        <a onClick={() => handleViewChange('About')}>
                             About
                         </a>
                     </li>

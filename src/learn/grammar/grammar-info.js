@@ -14,12 +14,14 @@ const GrammarInfo = ({ title, data, makeKey, headers }) => (
 );
 
 const Conjugation = ({ conjugation: { name, theme, data } }) => {
-    const makeConjugationKey = data => data.tense + ' ' + data.mood + ' ' + data.voice;
+    const makeConjugationKey = data => data.tense + ' ' + data.mood + ' '
+        + data.voice;
     return (
-        <GrammarInfo title={ `${name} Conjugation` +
-        (theme ? '(' + theme + ')' : '') }
+        <GrammarInfo title={
+                        `${name} Conjugation` + (theme ? '(' + theme + ')' : '')
+                    }
                      data={data}
-                     headers={ ['Person', 'Sg.', 'Pl.'] }
+                     headers={ [ 'Person', 'Sg.', 'Pl.' ] }
                      makeKey={makeConjugationKey} />
     );
 };

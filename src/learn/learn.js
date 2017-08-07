@@ -20,19 +20,29 @@ class Quiz extends React.Component {
         this.setState({ word, conjugation, declension });
     }
 
-    onChange (correct) {
-        this.setState({correct});
+    onChange (value) {
+        const correct = value === this.props.card.input.form;
         if (correct) {
+            this.setState({ correct });
             this.props.onCorrect();
         }
     }
 
     componentWillReceiveProps ({ word }) {
-        this.setState({ correct: 'false', word: word });
+        this.setState({ correct: false, word });
     }
 
     render () {
-        const { card: { anteInput, input, postInput, literalTranslation, idiomaticTranslation }, language } = this.props;
+        const {
+            card: {
+                anteInput,
+                input,
+                postInput,
+                literalTranslation,
+                idiomaticTranslation
+            },
+            language
+        } = this.props;
         const { word, conjugation, declension, correct } = this.state;
         return (
             <div>
@@ -56,21 +66,27 @@ class Quiz extends React.Component {
                         <table>
                             <thead><tr><th>Translation</th></tr></thead>
                             <tbody>
-                                <tr><td>Literal</td><td>{ literalTranslation }</td></tr>
-                                <tr><td>Idiomatic</td><td>{ idiomaticTranslation }</td></tr>
+                                <tr>
+                                    <td>Literal</td>
+                                    <td>{ literalTranslation }</td>
+                                </tr>
+                                <tr>
+                                    <td>Idiomatic</td>
+                                    <td>{ idiomaticTranslation }</td>
+                                </tr>
                             </tbody>
                         </table>
                     </fieldset>
                 </div>
 
-                { word ? (
+                { word && (
                     <div>
                         <hr />
                         <WordInfo word={word}
                                   conjugation={conjugation}
                                   declension={declension} />
                     </div>
-                ) : null }
+                ) }
             </div>
         );
     }
@@ -84,11 +100,20 @@ class Learn extends React.Component {
         this.nextCard = this.nextCard.bind(this);
     }
 
-    // TODO: Choose next card based on statistical analysis of performance on previous cards.
+    // TODO: Choose next card based on statistical analysis of performance on
+    //       previous cards.
     nextCard () {
-        // TODO: fix bug where, after answering one question, if you click on two words of the same declension,
-        // TODO: (continued) the table for their forms shows the first of the two after clicking the second.
-        this.setState({ cardIndex: (this.state.cardIndex + 1) % this.props.cards.length });
+        // TODO: fix bug where, after answering one question, if you click on
+        //       two words of the same declension, the table for their forms 
+        //       shows the first of the two after clicking the second.
+        console.log('Correct');
+        setTimeout(() => {
+            this.setState({
+                cardIndex: (this.state.cardIndex + 1) % this.props.cards.length
+            });
+            // Delay 3 seconds on correct answer before showing the next one.
+        }, 1000 * 3);
+
     }
 
     render () {

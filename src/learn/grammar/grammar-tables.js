@@ -1,6 +1,15 @@
 import React from 'react';
 
-const GrammarTable = ({ className, data: { tense, mood, voice, table }, headers }) => (
+const GrammarTable = ({
+    className,
+    data: {
+        tense,
+        mood,
+        voice,
+        table
+    },
+    headers
+}) => (
     <div className={ className }>
         <h4>{ tense } { mood } { voice }</h4>
         <table className="table">
@@ -10,7 +19,7 @@ const GrammarTable = ({ className, data: { tense, mood, voice, table }, headers 
             <tbody>
             { table.map((row, index) => (
                 <tr key={index}>
-                    { row.map((col,index) => (
+                    { row.map((col, index) => (
                         <td key={index}>
                             {col}
                         </td>
@@ -23,89 +32,92 @@ const GrammarTable = ({ className, data: { tense, mood, voice, table }, headers 
 );
 
 // props = { className, data, headers }
-class GrammarQuizTable extends React.Component {
-    constructor (props) {
-        super(props);
-
-        const partialState = {
-            className: props.className,
-            headers: props.headers
-        };
-
-        partialState.inputData = Object.create(props.data);
-        partialState.inputData.table = partialState.inputData.table.map((row, rowIndex) => (
+const GrammarQuizTable = ({ className, data, headers }) => {
+    const inputData = Object.assign({}, data);
+    inputData.table = inputData.table
+        .map((row, rowIndex) => (
             row.map((col, index) => (
-                index === 0 ? col : <QuizInput key={index}
-                                               className="form-control"
-                                               placeholder={col}
-                                               correctClass="correct"
-                                               incorrectClass="incorrect" />
+                index === 0
+                    ? col
+                    : (<QuizInput key={index}
+                                  className="form-control"
+                                  placeholder={col}
+                                  correctClass="correct"
+                                  incorrectClass="incorrect" />)
             ))
-        ));
-
-        this.state = partialState;
-    }
-
-    render () {
-        return (
-            <GrammarTable className={this.state.className}
-                          data={this.state.inputData}
-                          headers={this.state.headers} />
-        );
-    }
-}
+        )
+    );
+    return (
+        <GrammarTable className={className}
+                        data={inputData}
+                        headers={headers} />
+    );
+};
 
 class QuizInput extends React.Component {
     constructor (props) {
         super(props);
-        this.state = { answer: '', className: this.props.className || '' };
+        this.state = {
+            answer: '',
+            classNames: [ this.props.className || '' ]
+        };
 
         this.handleChange = this.handleChange.bind(this);
     }
 
     componentWillReceiveProps ({ answer, className }) {
         if (answer !== this.props.answer) {
-            this.setState({ answer: '', className: className || '' });
+            this.setState({ answer: '', classNames: [ className || '' ] });
         }
     }
 
     // TODO: Correct bug where colors do not change in inputs.
     handleChange (event) {
-        const { correct, incorrect, answer } = this.props;
+        const {
+            correctClass = 'correct',
+            incorrectClass = 'incorrect'
+        } = this.props;
+        const answer = this.props.placeholder;
         const guess = event.target.value.toLocaleLowerCase();
-        let className = event.target.className || '';
 
-        // If the input is not colored to match the correctness of the input, remove the incorrect class,
+        // If the input is not colored to match the correctness of the input,
+        // remove the incorrect class;
         // if present, and append the correct class.
-        // Otherwise, when it is '', it should be the default color to indicate it has not been attempted
-        // or that it has been reset, so remove any correctness classes (i.e. remove both correct & incorrect).
-        const desiredClass = (guess === answer) ? correct : incorrect;
-        if (!className.includes(` ${desiredClass}`) && guess !== '') {
-            const wrongClass = (desiredClass === correct) ? incorrect : correct;
+        // Otherwise, when it is '', it should be the default color to indicate
+        // it has not been attempted or that it has been reset, so remove any
+        // correctness classes (i.e. remove both correct & incorrect).
+        const desiredClass = (guess === answer)
+                                ? correctClass
+                                : incorrectClass;
+        const wrongClass = (correctClass === desiredClass)
+                                ? incorrectClass
+                                : correctClass;
 
-            // if it contains the wrong class, remove it and append the correct class.
-            if (className.includes(` ${wrongClass}`)) {
-                className = className.split(wrongClass).join('');
-            }
-            className += ` ${desiredClass}`;
-        } else if (guess === '') {
-            // Remove both correct & incorrect classes.
-            className = className.split(correct).join('').split(incorrect).join('');
+        // If the box is empty, don't mark it as correct or incorrect.
+        if (guess === '') {
+            this.setState({
+                classNames: this.state.classNames
+                            .filter(name => name !== correctClass
+                                        && name !== incorrectClass)
+            });
+        // Otherwise, if the desired class is not currently applied, apply it
+        // and remove the undesired class.
+        } else if (!this.state.classNames.includes(desiredClass)) {
+            this.setState({
+                classNames: this.state.classNames
+                            .filter(name => name !== wrongClass)
+                            .concat(desiredClass)
+            });
         }
-        console.log(className);
-        console.log(guess);
 
-        this.setState({ answer: guess, className });
+        this.setState({ answer: guess });
 
-        // If the value is correct, call the callback for a correct answer.
-        if (this.props.onChange) {
-            this.props.onChange(guess === answer);
-        }
+        this.props.onChange(guess);
     }
 
     render () {
         return (
-            <input className={this.state.className}
+            <input className={this.state.classNames.join(' ')}
                    type="text"
                    size={this.props.size}
                    value={this.state.answer}
