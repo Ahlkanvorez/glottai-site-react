@@ -3,19 +3,31 @@ const Latin = {
     getGrammar (word) {
         const { type, dictionaryEntry } = word;
 
-        // If props have been properly given, grammars and target are guaranteed to be assigned.
-        let grammars, target, grammarType;
+        // If props have been properly given, grammars and target are guaranteed
+        // to be assigned.
+        let grammars;
+        let target;
+        let grammarType;
         if (type === 'verb') {
-            [ grammars, target, grammarType ] = [ this.conjugations, word.conjugation, 'conjugation' ];
+            [ grammars, target, grammarType ] = [
+                this.conjugations,
+                word.conjugation,
+                'conjugation'
+            ];
         } else if (type.includes('noun') || type.includes('adjective')) {
-            [ grammars, target, grammarType ] = [ this.declensions, word.declension, 'declension' ];
+            [ grammars, target, grammarType ] = [
+                this.declensions,
+                word.declension,
+                'declension'
+            ];
         } else {
             // Only verbs, nouns, and adjectives are supported.
             // TODO: Support other word types.
             return;
         }
 
-        grammars = grammars.filter(grammar => grammar.name.toLocaleLowerCase() === target.toLocaleLowerCase());
+        grammars = grammars.filter(grammar => grammar.name
+                        .toLocaleLowerCase() === target.toLocaleLowerCase());
         if (target !== 'Irregular') {
             return {
                 grammarType,
@@ -24,15 +36,18 @@ const Latin = {
         }
         return {
             grammarType,
-            grammar: grammars.find(grammar => grammar.dictionaryEntry === dictionaryEntry)
+            grammar: grammars
+                .find(grammar => grammar.dictionaryEntry === dictionaryEntry)
         };
     },
 
     // TODO: complete verb portion of, and cleanup, getStem().
     getStem (word, { grammarType, grammar }) {
-        let conjugation, declension;
+        let conjugation;
+        let declension;
         if (grammarType === 'conjugation') {
             conjugation = grammar;
+            // TODO: Finish support for conjugations.
         } else if (grammarType === 'declension') {
             declension = grammar;
         } else {
@@ -40,34 +55,40 @@ const Latin = {
         }
         const { type, dictionaryEntry, gender } = word;
         if (type === 'verb') {
-            // If the word is a verb, then the dictionary entry is the principal parts,
-            // and the stem is the second principal part minus the infinitive ending.
+            // If the word is a verb, then the dictionary entry is the principal
+            // parts, and the stem is the second principal part minus the
+            // infinitive ending.
             return dictionaryEntry.split(' ')[1].slice(0, -3);
         } else if (type.includes('noun') || type.includes('adjective')) {
-            // If the word is a noun or adjective, then the stem is the result of removing the case ending
-            // from the genitive singular form. If it is a noun, the genitive singular is the second word
-            // in the dictionary entry; if it is an adjective with one ending, it is derived just as a noun;
-            // if it is an adjective of two endings, the stem can be derived from removing the nom.neut.sg. ending
-            // from the second word in the dictionary entry; if it is an adjective of three endings, the stem can
-            // be derived from removing the nom.fem.sg. ending from the second word in the dictionary entry.
-            if (type.includes('adjective') && dictionaryEntry.split(' ').length === 3) {
-                if (dictionaryEntry.split(' ')[1] !== 'gen.') {
-                    // [0][1] is the nom.sg.f. entry for an adjective of three endings.
-                    const ending = declension.data.find(x => x.gender === gender).table[0][1];
-                    // The - allows indexing from the end of the string, and the slice(1) removes the prefixed '-'
-                    return dictionaryEntry.split(' ')[1].slice(0, -ending.slice(1).length);
-                } else {
-                    // [0][2] is the nom.sg.n. entry for an adjective of three endings.
-                    const ending = declension.data.find(x => x.gender === gender).table[0][2];
-                    // The - allows indexing from the end of the string, and the slice(1) removes the prefixed '-'
-                    return dictionaryEntry.split(' ')[1].slice(0, -ending.slice(1).length);
-                }
+            // If the word is a noun or adjective, then the stem is the result
+            // of removing the case ending from the genitive singular form. If
+            // it is a noun, the genitive singular is the second word in the
+            // dictionary entry; if it is an adjective with one ending, it is
+            // derived just as a noun; if it is an adjective of two endings, the
+            // stem can be derived from removing the nom.neut.sg. ending from
+            // the second word in the dictionary entry; if it is an adjective of
+            // three endings, the stem can be derived from removing the
+            // nom.fem.sg. ending from the second word in the dictionary entry.
+            if (type.includes('adjective')
+                    && dictionaryEntry.split(' ').length === 3) {
+                // col = 1 is the nom.sg.f. entry for an adj. of 3 endings.
+                // col = 2 is the nom.sg.n. entry for an adj. of 3 endings.
+                const col = (dictionaryEntry.split(' ')[1] !== 'gen.') ? 1 : 2;
+                const ending = declension.data
+                    .find(x => x.gender === gender).table[0][col];
+                return dictionaryEntry
+                        .split(' ')[1]
+                        .slice(0, -ending.slice(1).length);
             }
             if (type.includes('noun')) {
                 // [1][1] is the gen.sg. entry for a noun.
-                const ending = declension.data.find(x => x.gender === gender).table[1][1];
-                // The - allows indexing from the end of the string, and the slice(1) removes the prefixed '-'
-                return dictionaryEntry.split(' ')[1].slice(0, -ending.slice(1).length);
+                const ending = declension.data
+                    .find(x => x.gender === gender).table[1][1];
+                // The - allows indexing from the end of the string,
+                // and the slice(1) removes the prefixed '-'
+                return dictionaryEntry
+                    .split(' ')[1]
+                    .slice(0, -ending.slice(1).length);
             }
         }
     },
@@ -85,8 +106,11 @@ const Latin = {
             const stem = this.getStem(word, { grammarType, grammar });
             grammar.data = grammar.data.map(data => {
                 data.table = data.table.map(row => (
-                    row.map((col, index) => (index === 0 || word.conjugation === 'Irregular')
-                        ? col : (stem + col.slice(1)))
+                    row.map((col, index) =>
+                        (index === 0 || word.conjugation === 'Irregular')
+                            ? col
+                            : (stem + col.slice(1))
+                    )
                 ));
                 return data;
             });
@@ -94,8 +118,11 @@ const Latin = {
             const stem = this.getStem(word, { grammarType, grammar });
             grammar.data = grammar.data.map(data => {
                 data.table = data.table.map(row => (
-                    row.map((col, index) => (index === 0 || word.declension === 'Irregular')
-                        ? col : (stem + col.slice(1)))
+                    row.map((col, index) =>
+                        (index === 0 || word.declension === 'Irregular')
+                            ? col
+                            : (stem + col.slice(1))
+                    )
                 ));
                 return data;
             });
@@ -112,23 +139,23 @@ const firstConjugation = {
     theme: 'ā',
     data: [
         {
-            tense: "Present",
-            mood: "Indicative",
-            voice: "Active",
+            tense: 'Present',
+            mood: 'Indicative',
+            voice: 'Active',
             table: [
-                ["1st", "-ō", "-āmus"],
-                ["2nd", "-ās",  "-ātis"],
-                ["3rd", "-at", "-ant"]
+                [ '1st', '-ō', '-āmus' ],
+                [ '2nd', '-ās', '-ātis' ],
+                [ '3rd', '-at', '-ant' ]
             ]
         },
         {
-            tense: "Future",
-            mood: "Indicative",
-            voice: "Active",
+            tense: 'Future',
+            mood: 'Indicative',
+            voice: 'Active',
             table: [
-                ["1st", "-ābō", "-ābimus"],
-                ["2nd", "-ābis", "-ābitis"],
-                ["3rd", "-ābit", "-ābunt"]
+                [ '1st', '-ābō', '-ābimus' ],
+                [ '2nd', '-ābis', '-ābitis' ],
+                [ '3rd', '-ābit', '-ābunt' ]
             ]
         }
     ]
@@ -142,9 +169,9 @@ const secondConjugation = {
             mood: 'Indicative',
             voice: 'Active',
             table: [
-                ["1st", "-eō", "-ēmus"],
-                ["2nd", "-ēs", "-ētis"],
-                ["3rd", "-et", "-ent"]
+                [ '1st', '-eō', '-ēmus' ],
+                [ '2nd', '-ēs', '-ētis' ],
+                [ '3rd', '-et', '-ent' ]
             ]
         },
         {
@@ -152,9 +179,9 @@ const secondConjugation = {
             mood: 'Indicative',
             voice: 'Active',
             table: [
-                ["1st", "-uī", "-uimus"],
-                ["2nd", "-uistī", "-uistis"],
-                ["3rd", "-uit", "-ērunt"]
+                [ '1st', '-uī', '-uimus' ],
+                [ '2nd', '-uistī', '-uistis' ],
+                [ '3rd', '-uit', '-ērunt' ]
             ]
         }
     ]
@@ -168,9 +195,9 @@ const irregularConjugationSumEsse = {
             mood: 'Indicative',
             voice: 'Active',
             table: [
-                ["1st", "sum", "sumus"],
-                ["2nd", "es", "estis"],
-                ["3rd", "est", "sunt"]
+                [ '1st', 'sum', 'sumus' ],
+                [ '2nd', 'es', 'estis' ],
+                [ '3rd', 'est', 'sunt' ]
             ]
         },
         {
@@ -178,26 +205,30 @@ const irregularConjugationSumEsse = {
             mood: 'Indicative',
             voice: 'Active',
             table: [
-                ["1st", "fuī", "fuimus"],
-                ["2nd", "fuistī", "fuistis"],
-                ["3rd", "fuit", "fuērunt"]
+                [ '1st', 'fuī', 'fuimus' ],
+                [ '2nd', 'fuistī', 'fuistis' ],
+                [ '3rd', 'fuit', 'fuērunt' ]
             ]
         }
     ]
 };
-Latin.conjugations = [firstConjugation, secondConjugation, irregularConjugationSumEsse];
+Latin.conjugations = [
+    firstConjugation,
+    secondConjugation,
+    irregularConjugationSumEsse
+];
 
 const firstDeclension = {
     name: 'First',
     data: [
         {
-            gender: "f",
+            gender: 'f',
             table: [
-                ["Nom./Voc.", "-a", "-ae"],
-                ["Gen.", "-ae", "-ārum"],
-                ["Dat.", "-ae", "-īs"],
-                ["Acc.", "-am",  "-ās"],
-                ["Abl.", "-ā",  "-īs"]
+                [ 'Nom./Voc.', '-a', '-ae' ],
+                [ 'Gen.', '-ae', '-ārum' ],
+                [ 'Dat.', '-ae', '-īs' ],
+                [ 'Acc.', '-am', '-ās' ],
+                [ 'Abl.', '-ā', '-īs' ]
             ]
         }
     ]
@@ -206,24 +237,24 @@ const secondDeclension = {
     name: 'Second',
     data: [
         {
-            gender: "m",
+            gender: 'm',
             table: [
-                ["Nom.", "-us/er", "-ī"],
-                ["Gen.", "-ī", "-ōrum"],
-                ["Dat.", "-ō", "-īs"],
-                ["Acc.", "-um", "-ōs"],
-                ["Abl.", "-ō", "-īs"],
-                ["Voc.", "-e/er", "-ī"]
+                [ 'Nom.', '-us/er', '-ī' ],
+                [ 'Gen.', '-ī', '-ōrum' ],
+                [ 'Dat.', '-ō', '-īs' ],
+                [ 'Acc.', '-um', '-ōs' ],
+                [ 'Abl.', '-ō', '-īs' ],
+                [ 'Voc.', '-e/er', '-ī' ]
             ]
         },
         {
-            gender: "n",
+            gender: 'n',
             table: [
-                ["Nom./Voc.", "-um", "-a"],
-                ["Gen.", "-ī", "-ōrum"],
-                ["Dat.", "-ō", "-īs"],
-                ["Acc.", "-um", "-a"],
-                ["Abl.", "-ō", "-īs"]
+                [ 'Nom./Voc.', '-um', '-a' ],
+                [ 'Gen.', '-ī', '-ōrum' ],
+                [ 'Dat.', '-ō', '-īs' ],
+                [ 'Acc.', '-um', '-a' ],
+                [ 'Abl.', '-ō', '-īs' ]
             ]
         }
     ]
@@ -234,16 +265,19 @@ const irregularDeclensionEgo = {
     data: [
         {
             table: [
-                ['Nom.', 'egō', 'nōs'],
-                ['Gen.', 'meī', 'nostrum'],
-                ['Dat.', 'mihi', 'nōbis'],
-                ['Acc.', 'mē', 'nōs'],
-                ['Abl.', 'mē', 'nōbīs']
+                [ 'Nom.', 'egō', 'nōs' ],
+                [ 'Gen.', 'meī', 'nostrum' ],
+                [ 'Dat.', 'mihi', 'nōbis' ],
+                [ 'Acc.', 'mē', 'nōs' ],
+                [ 'Abl.', 'mē', 'nōbīs' ]
             ]
         }
     ]
 };
-Latin.declensions = [firstDeclension, secondDeclension, irregularDeclensionEgo];
-
+Latin.declensions = [
+    firstDeclension,
+    secondDeclension,
+    irregularDeclensionEgo
+];
 
 export default Latin;
