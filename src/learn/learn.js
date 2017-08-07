@@ -103,9 +103,6 @@ class Learn extends React.Component {
     // TODO: Choose next card based on statistical analysis of performance on
     //       previous cards.
     nextCard () {
-        // TODO: fix bug where, after answering one question, if you click on
-        //       two words of the same declension, the table for their forms 
-        //       shows the first of the two after clicking the second.
         console.log('Correct');
         setTimeout(() => {
             this.setState({

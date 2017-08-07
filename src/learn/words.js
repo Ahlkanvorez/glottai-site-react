@@ -2,9 +2,6 @@ import React from 'react';
 import { Grammar } from './grammar/grammar.js';
 import Latin from './grammar/latin-grammar.js';
 
-// TODO: Generalize the Latin specific grammar into a library, so a Latin or 
-//       Greek object can be passed as a parameter and handle all of the
-//       specific grammar for each language.
 const WordDefinition = ({ word: { dictionaryEntry, type, definition } }) => (
     <dl>
         <dt>{ dictionaryEntry }</dt>

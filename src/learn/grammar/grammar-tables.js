@@ -71,7 +71,6 @@ class QuizInput extends React.Component {
         }
     }
 
-    // TODO: Correct bug where colors do not change in inputs.
     handleChange (event) {
         const {
             correctClass = 'correct',
