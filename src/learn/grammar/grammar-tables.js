@@ -63,11 +63,18 @@ class QuizInput extends React.Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
+        this.onKeyPress = this.onKeyPress.bind(this);
     }
 
     componentWillReceiveProps ({ answer, className }) {
         if (answer !== this.props.answer) {
             this.setState({ answer: '', classNames: [ className || '' ] });
+        }
+    }
+
+    onKeyPress (event) {
+        if (event.key === 'Enter') {
+            this.props.onEnter(this.state.answer);
         }
     }
 
@@ -121,6 +128,7 @@ class QuizInput extends React.Component {
                    size={this.props.size}
                    value={this.state.answer}
                    onChange={this.handleChange}
+                   onKeyPress={this.onKeyPress}
                    placeholder={this.props.placeholder} />
         );
     }

@@ -10,6 +10,7 @@ class Quiz extends React.Component {
 
         this.showWordInfo = this.showWordInfo.bind(this);
         this.onChange = this.onChange.bind(this);
+        this.onEnter = this.onEnter.bind(this);
     }
 
     showWordInfo (word, { grammarType, grammar }) {
@@ -18,6 +19,17 @@ class Quiz extends React.Component {
             grammarType === 'declension' ? grammar : undefined
         ];
         this.setState({ word, conjugation, declension });
+    }
+
+    onEnter (value) {
+        if (value === '') {
+            // If the user presses enter with no answer given, display the
+            // correct answer for three seconds, then hide it.
+            this.setState({ placeholder: this.props.card.input.form });
+            setTimeout(() => {
+                this.setState({ placeholder: '' });
+            }, 1000 * 3);
+        }
     }
 
     onChange (value) {
@@ -43,7 +55,13 @@ class Quiz extends React.Component {
             },
             language
         } = this.props;
-        const { word, conjugation, declension, correct } = this.state;
+        const {
+            word,
+            conjugation,
+            declension,
+            correct,
+            placeholder = ''
+        } = this.state;
         return (
             <div>
                 <div className="centered">
@@ -52,12 +70,13 @@ class Quiz extends React.Component {
                         <Words words={anteInput}
                                language={language}
                                onClick={this.showWordInfo} />
-                        <QuizInput placeholder=""
+                        <QuizInput placeholder={placeholder}
                                    answer={input.form}
                                    className="learningQuizInput"
                                    size={input.form.length}
                                    correctClass="correct"
                                    incorrectClass="incorrect"
+                                   onEnter={this.onEnter}
                                    onChange={this.onChange} />
                         <Words words={postInput}
                                language={language}
