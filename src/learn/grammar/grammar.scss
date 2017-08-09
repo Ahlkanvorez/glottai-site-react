@@ -10,3 +10,22 @@ $smoky-black: #0F0E0E;
   background-color: lightcoral;
   color: $smoky-black;
 }
+
+/* Change the placeholder color in all modern browsers: */
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+  color: $smoky-black;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+  color: $smoky-black;
+  opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+  color: $smoky-black;
+  opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: $smoky-black;
+}
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: $smoky-black;
+}
