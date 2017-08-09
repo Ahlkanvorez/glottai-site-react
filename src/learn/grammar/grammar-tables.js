@@ -118,7 +118,9 @@ class QuizInput extends React.Component {
 
         this.setState({ answer: guess });
 
-        this.props.onChange(guess);
+        if (this.props.onChange) {
+            this.props.onChange(guess);
+        }
     }
 
     render () {
